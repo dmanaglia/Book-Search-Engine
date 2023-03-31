@@ -33,13 +33,22 @@ const resolvers = {
         return { token, user };
     },
     saveBook: async (parent, { bookId, authors, title, description, image }, context) => {
-      console.log(context);
-      console.log({ bookId, authors, title, description, image });
       const updatedUser = await User.findOneAndUpdate(
         { _id: context.user._id },
         { $addToSet: { savedBooks: {bookId, authors, title, description, image} } },
         { new: true, runValidators: true }
       );
+      return updatedUser;
+    },
+    deleteBook: async (parent, {bookId}, context) => {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $pull: { savedBooks: { bookId } } },
+        { new: true }
+      );
+      if (!updatedUser) {
+        throw new AuthenticationError('Invalid token! or unknown Id?');
+      }
       return updatedUser;
     }
   },

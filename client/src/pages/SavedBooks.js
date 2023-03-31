@@ -18,25 +18,33 @@ import { FIND_USER } from '../utils/queries';
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
 
+  const { loading, data } = useQuery(FIND_USER, {});
+
+  const user = data?.findUser || {};
+
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
 
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const token = Auth.loggedIn() ? Auth.getToken() : null;
+        // const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-        if (!token) {
-          return false;
-        }
+        // if (!token) {
+        //   return false;
+        // }
 
-        const response = await getMe(token);
+        // const response = await getMe(token);
 
-        if (!response.ok) {
-          throw new Error('something went wrong!');
-        }
+        // if (!response.ok) {
+        //   throw new Error('something went wrong!');
+        // }
 
-        const user = await response.json();
+        // const user = await response.json();
+
+        // const {data} = await findUser();
+        // console.log(data);
+
         setUserData(user);
       } catch (err) {
         console.error(err);
@@ -44,7 +52,7 @@ const SavedBooks = () => {
     };
 
     getUserData();
-  }, [userDataLength]);
+  }, [user]);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -73,7 +81,7 @@ const SavedBooks = () => {
   // if data isn't here yet, say so
   if (!userDataLength) {
     return <h2>LOADING...</h2>;
-  }
+  } 
 
   return (
     <>

@@ -1,20 +1,20 @@
 import { gql } from '@apollo/client';
 
 export const FIND_USER = gql`
-    query FindUser($userId: ID!) {
-        findUser(userId: $userId) {
+    query findUser {
+        findUser {
             _id
-            username
             email
             password
+            username
             savedBooks {
                 _id
-                title
                 authors
                 bookId
                 description
                 image
                 link
+                title
             }
         }
     }

@@ -32,28 +32,16 @@ const resolvers = {
         const token = signToken(user);
         return { token, user };
     },
-    // addSkill: async (parent, { profileId, skill }) => {
-    //   return User.findOneAndUpdate(
-    //     { _id: profileId },
-    //     {
-    //       $addToSet: { skills: skill },
-    //     },
-    //     {
-    //       new: true,
-    //       runValidators: true,
-    //     }
-    //   );
-    // },
-    // removeProfile: async (parent, { profileId }) => {
-    //   return User.findOneAndDelete({ _id: profileId });
-    // },
-    // removeSkill: async (parent, { profileId, skill }) => {
-    //   return User.findOneAndUpdate(
-    //     { _id: profileId },
-    //     { $pull: { skills: skill } },
-    //     { new: true }
-    //   );
-    // },
+    saveBook: async (parent, { bookId, authors, title, description, image }, context) => {
+      console.log(context);
+      console.log({ bookId, authors, title, description, image });
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: context.user._id },
+        { $addToSet: { savedBooks: {bookId, authors, title, description, image} } },
+        { new: true, runValidators: true }
+      );
+      return updatedUser;
+    }
   },
 };
 

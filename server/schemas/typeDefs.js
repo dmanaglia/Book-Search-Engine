@@ -10,10 +10,12 @@ const typeDefs = gql`
   }
 
   type Book {
+    # mongoose Id
     _id: ID
     authors: [String]!
     description: String
-    bookId: String
+    # Google Id
+    bookId: ID
     image: String
     link: String
     title: String
@@ -33,6 +35,7 @@ const typeDefs = gql`
     # Set up mutations to handle creating a profile or logging into a profile and return Auth type
     addUser(username: String!, email: String!, password: String!): Auth
     login(email: String!, password: String!): Auth
+    saveBook(bookId: ID!, authors: [String]!, title: String!, description: String!, image: String!): User
   }
 `;
 

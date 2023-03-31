@@ -7,8 +7,6 @@ import {
   Col
 } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
-import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 import { useQuery } from '@apollo/client';
@@ -29,23 +27,6 @@ const SavedBooks = () => {
   useEffect(() => {
     const getUserData = async () => {
       try {
-        // const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-        // if (!token) {
-        //   return false;
-        // }
-
-        // const response = await getMe(token);
-
-        // if (!response.ok) {
-        //   throw new Error('something went wrong!');
-        // }
-
-        // const user = await response.json();
-
-        // const {data} = await findUser();
-        // console.log(data);
-
         setUserData(user);
       } catch (err) {
         console.error(err);
@@ -57,22 +38,8 @@ const SavedBooks = () => {
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
-    // const token = Auth.loggedIn() ? Auth.getToken() : null;
-
-    // if (!token) {
-    //   return false;
-    // }
-
     try {
-    //   const response = await deleteBook(bookId, token);
-
-    //   if (!response.ok) {
-    //     throw new Error('something went wrong!');
-    //   }
-
-    //   const updatedUser = await response.json();
       const {newData} = await deleteBook({variables: {bookId}});
-      console.log(newData);
 
       setUserData(newData.deleteBook);
       // upon success, remove book's id from localStorage

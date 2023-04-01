@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Container,
   Card,
@@ -15,33 +15,17 @@ import { useMutation } from '@apollo/client';
 import { DELETE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState({});  
   const { loading, data } = useQuery(FIND_USER, {});
   const [deleteBook, { error, newData }] = useMutation(DELETE_BOOK);
 
-  const user = data?.findUser || newData?.findUser || {};
+  const userData = data?.findUser || newData?.findUser || {};
 
   // use this to determine if `useEffect()` hook needs to run again
   const userDataLength = Object.keys(userData).length;
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        setUserData(user);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    getUserData();
-  }, [user]);
-
-  // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     try {
-      const {newData} = await deleteBook({variables: {bookId}});
-
-      setUserData(newData.deleteBook);
+      await deleteBook({variables: {bookId}});
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
@@ -49,15 +33,14 @@ const SavedBooks = () => {
     }
   };
 
-  // if data isn't here yet, say so
   if (!userDataLength) {
     return <h2>LOADING...</h2>;
   } 
 
   return (
     <>
-      <div fluid className='text-light bg-dark p-5'>
-        <Container>
+      <div className='text-light bg-dark p-5'>
+        <Container fluid>
           <h1>Viewing saved books!</h1>
         </Container>
       </div>
@@ -68,13 +51,13 @@ const SavedBooks = () => {
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {userData.savedBooks.map((book, index) => {
             return (
-              <Col md="4">
+              <Col key={index} md="4">
                 <Card key={book.bookId} border='dark'>
                   {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
                   <Card.Body>
-                    <Card.Title>{book.title}</Card.Title>
+                    <a href={book.link} target='_blank' rel="noopener noreferrer"><Card.Title>{book.title}</Card.Title></a>
                     <p className='small'>Authors: {book.authors}</p>
                     <Card.Text>{book.description}</Card.Text>
                     <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>

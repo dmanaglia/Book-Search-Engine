@@ -79,8 +79,8 @@ const SearchBooks = () => {
 
   return (
     <>
-      <div fluid className='text-light bg-dark pt-5'>
-        <Container>
+      <div className='text-light bg-dark pt-5'>
+        <Container fluid>
           <h1>Search for Books!</h1>
           <Form onSubmit={handleFormSubmit}>
               <Row>
@@ -111,9 +111,9 @@ const SearchBooks = () => {
             : 'Search for a book to begin'}
         </h2>
         <Row>
-          {searchedBooks.map((book) => {
+          {searchedBooks.map((book, index) => {
             return (
-              <Col md="4">
+              <Col md="4" key={index}>
                 <Card key={book.bookId} border='dark'>
                   {book.image ? (
                     <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
